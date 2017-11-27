@@ -8,8 +8,9 @@ using namespace std;
 
 
 int vectorSum[1792]; // storing the number of the each sum (1792 is the max sum, because if each cell contains 256 the maximum sum is 1792 of a snake)
-int iVectorSnakes[1792][7]; // storing x of the snakes
-int jVectorSnakes[1792][7]; // storing y of the snakes
+
+vector <vector <vector<int> > > xVectorSnakes;
+vector <vector <vector<int> > > yVectorSnakes;
 
 //READING A CSV FILE
 vector <vector<int> > csvToMatrix(const char* fileName){
@@ -48,26 +49,43 @@ void findSnakes(int i, int j, vector <vector<int> > grid ,  int iSnake[] = new i
 					
 					//checking if is valid pair
 					bool validPair = true;
-					for(int ii=0; ii<7;ii++){
-						for (int jj=0; jj<7; jj++){
-							if( (iSnake[ii] == iVectorSnakes[sum][jj]) && (jSnake[ii] == jVectorSnakes[sum][jj]) ) 
-								validPair = false;
+					int countTrue;
+					for (int kk=0; kk< xVectorSnakes[sum].size();kk++){
+						for(int ii=0; ii<7;ii++){
+							for (int jj=0; jj<7; jj++){
+								if( (iSnake[ii] == xVectorSnakes[sum][kk][jj]) && (jSnake[ii] == yVectorSnakes[sum][kk][jj]) ) {
+									validPair = false;
+									break;
+								}
+							}
 						}
-					}
-					
-					if(validPair){
-						cout << "SUM:" <<sum<< endl;
-						cout << "SNAKE A:" <<iVectorSnakes[sum][0]+1 << "," <<jVectorSnakes[sum][0]+1 << " - " <<iVectorSnakes[sum][1]+1 << "," <<jVectorSnakes[sum][1]+1 << " - " <<iVectorSnakes[sum][2]+1 << "," <<jVectorSnakes[sum][2]+1 << " - " <<iVectorSnakes[sum][3]+1 << "," <<jVectorSnakes[sum][3]+1 << " - " <<iVectorSnakes[sum][4]+1 << "," <<jVectorSnakes[sum][4]+1 << " - " <<iVectorSnakes[sum][5]+1 << "," <<jVectorSnakes[sum][5]+1 << " - " <<iVectorSnakes[sum][6]+1 << "," <<jVectorSnakes[sum][6]+1 << endl;
-						cout << "SNAKE B:" <<iSnake[0]+1			 << "," <<jSnake[0]+1 			  << " - " <<iSnake[1]+1 			 << "," <<jSnake[1]+1 			 << " - " <<iSnake[2]+1 			 << "," <<jSnake[2]+1 			  << " - " <<iSnake[3]+1 			 << "," <<jSnake[3]+1 			  << " - " <<iSnake[4]+1 			 << "," <<jSnake[4]+1 			  << " - " <<iSnake[5]+1 			 << "," <<jSnake[5]+1 			  << " - " <<iSnake[6]+1 			 << "," <<jSnake[6]+1 			  << endl <<endl;
-						exit(0); //interrupts the program if find a pair of snakes
-					} 
-					
+						if (validPair) countTrue = kk;
+					}	
+							
+					if (validPair){
+							cout << "SUM:" <<sum<< endl;
+							cout << "SNAKE A:" <<xVectorSnakes[sum][countTrue][0]+1 << "," <<yVectorSnakes[sum][countTrue][0]+1 << " - " <<xVectorSnakes[sum][countTrue][1]+1 << "," <<yVectorSnakes[sum][countTrue][1]+1 << " - " <<xVectorSnakes[sum][countTrue][2]+1 << "," <<yVectorSnakes[sum][countTrue][2]+1 << " - " <<xVectorSnakes[sum][countTrue][3]+1 << "," <<yVectorSnakes[sum][countTrue][3]+1 << " - " <<xVectorSnakes[sum][countTrue][4]+1 << "," <<yVectorSnakes[sum][countTrue][4]+1 << " - " <<xVectorSnakes[sum][countTrue][5]+1 << "," <<yVectorSnakes[sum][countTrue][5]+1 << " - " <<xVectorSnakes[sum][countTrue][6]+1 << "," <<yVectorSnakes[sum][countTrue][6]+1 << endl;
+							cout << "SNAKE B:" <<iSnake[0]+1			 << "," <<jSnake[0]+1 			  << " - " <<iSnake[1]+1 			 << "," <<jSnake[1]+1 			 << " - " <<iSnake[2]+1 			 << "," <<jSnake[2]+1 			  << " - " <<iSnake[3]+1 			 << "," <<jSnake[3]+1 			  << " - " <<iSnake[4]+1 			 << "," <<jSnake[4]+1 			  << " - " <<iSnake[5]+1 			 << "," <<jSnake[5]+1 			  << " - " <<iSnake[6]+1 			 << "," <<jSnake[6]+1 			  << endl <<endl;
+							exit(0); //interrupts the program if find a pair of snakes
+						} else {
+							vector<int> newSnake;
+							xVectorSnakes[sum].push_back(newSnake);
+							yVectorSnakes[sum].push_back(newSnake);
+							for(int c=0;c<7;c++) { //storing the cells of a snake
+								xVectorSnakes[sum].back().push_back(iSnake[c]);
+								yVectorSnakes[sum].back().push_back(jSnake[c]);
+							}
+						}
+						
 					return;	
 				
 				} else {
+					vector<int> newSnake;
+					xVectorSnakes[sum].push_back(newSnake);
+					yVectorSnakes[sum].push_back(newSnake);
 					for(int c=0;c<7;c++) { //storing the cells of a snake
-						iVectorSnakes[sum][c]=iSnake[c];
-						jVectorSnakes[sum][c]=jSnake[c];
+						xVectorSnakes[sum].back().push_back(iSnake[c]);
+						yVectorSnakes[sum].back().push_back(jSnake[c]);
 					}			
 					return;	
 				}
@@ -116,6 +134,9 @@ int main(int argc, char* argv[]) {
 	//iniclializing the sum vector (count the occurrences of each sum)
 	for (int i = 0; i < 1792; i++){
 		vectorSum[i]=0;
+		vector <vector<int> > xrow,yrow;
+		xVectorSnakes.push_back(xrow);
+		yVectorSnakes.push_back(yrow); 
 	}
 
 	//STORING ALL THE SUMS/SNAKES OF EACH CELL(HEAD'S SNAKE)
