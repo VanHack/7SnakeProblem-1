@@ -7,11 +7,9 @@
 using namespace std;
 
 
-int vectorSum[1792]; // 1792 max sum
-int iVectorSnakesA[1792][7]; // x of the first snake
-int jVectorSnakesA[1792][7]; // y of the first snake
-int iVectorSnakesB[1792][7]; // x of the second snake
-int jVectorSnakesB[1792][7]; // y of the second snake
+int vectorSum[1792]; // storing the number of the each sum (1792 is the max sum, because if each cell contains 256 the maximum sum is 1792 of a snake)
+int iVectorSnakes[1792][7]; // storing x of the snakes
+int jVectorSnakes[1792][7]; // storing y of the snakes
 
 //READING A CSV FILE
 vector <vector<int> > csvToMatrix(const char* fileName){
@@ -47,24 +45,20 @@ void findSnakes(int i, int j, vector <vector<int> > grid ,  int iSnake[] = new i
 			if (lenghtSnake == 7){ //checking if is a 7 length snake
 				vectorSum[sum]++;
 				if (vectorSum[sum] > 1){
-					for(int c=0;c<7;c++) { //storing the cells of a second snake
-						iVectorSnakesB[sum][c]=iSnake[c];
-						jVectorSnakesB[sum][c]=jSnake[c];
-					}	
 					
 					//checking if is valid pair
 					bool validPair = true;
 					for(int ii=0; ii<7;ii++){
 						for (int jj=0; jj<7; jj++){
-							if( (iVectorSnakesB[sum][ii] == iVectorSnakesA[sum][jj]) && (jVectorSnakesB[sum][ii] == jVectorSnakesA[sum][jj]) ) 
+							if( (iSnake[ii] == iVectorSnakes[sum][jj]) && (jSnake[ii] == jVectorSnakes[sum][jj]) ) 
 								validPair = false;
 						}
 					}
 					
 					if(validPair){
 						cout << "SUM:" <<sum<< endl;
-						cout << "SNAKE A:" <<iVectorSnakesA[sum][0]+1 << "," <<jVectorSnakesA[sum][0]+1 << " - " <<iVectorSnakesA[sum][1]+1 << "," <<jVectorSnakesA[sum][1]+1 << " - " <<iVectorSnakesA[sum][2]+1 << "," <<jVectorSnakesA[sum][2]+1 << " - " <<iVectorSnakesA[sum][3]+1 << "," <<jVectorSnakesA[sum][3]+1 << " - " <<iVectorSnakesA[sum][4]+1 << "," <<jVectorSnakesA[sum][4]+1 << " - " <<iVectorSnakesA[sum][5]+1 << "," <<jVectorSnakesA[sum][5]+1 << " - " <<iVectorSnakesA[sum][6]+1 << "," <<jVectorSnakesA[sum][6]+1 << endl;
-						cout << "SNAKE B:" <<iVectorSnakesB[sum][0]+1 << "," <<jVectorSnakesB[sum][0]+1 << " - " <<iVectorSnakesB[sum][1]+1 << "," <<jVectorSnakesB[sum][1]+1 << " - " <<iVectorSnakesB[sum][2]+1 << "," <<jVectorSnakesB[sum][2]+1 << " - " <<iVectorSnakesB[sum][3]+1 << "," <<jVectorSnakesB[sum][3]+1 << " - " <<iVectorSnakesB[sum][4]+1 << "," <<jVectorSnakesB[sum][4]+1 << " - " <<iVectorSnakesB[sum][5]+1 << "," <<jVectorSnakesB[sum][5]+1 << " - " <<iVectorSnakesB[sum][6]+1 << "," <<jVectorSnakesB[sum][6]+1 << endl <<endl;
+						cout << "SNAKE A:" <<iVectorSnakes[sum][0]+1 << "," <<jVectorSnakes[sum][0]+1 << " - " <<iVectorSnakes[sum][1]+1 << "," <<jVectorSnakes[sum][1]+1 << " - " <<iVectorSnakes[sum][2]+1 << "," <<jVectorSnakes[sum][2]+1 << " - " <<iVectorSnakes[sum][3]+1 << "," <<jVectorSnakes[sum][3]+1 << " - " <<iVectorSnakes[sum][4]+1 << "," <<jVectorSnakes[sum][4]+1 << " - " <<iVectorSnakes[sum][5]+1 << "," <<jVectorSnakes[sum][5]+1 << " - " <<iVectorSnakes[sum][6]+1 << "," <<jVectorSnakes[sum][6]+1 << endl;
+						cout << "SNAKE B:" <<iSnake[0]+1			 << "," <<jSnake[0]+1 			  << " - " <<iSnake[1]+1 			 << "," <<jSnake[1]+1 			 << " - " <<iSnake[2]+1 			 << "," <<jSnake[2]+1 			  << " - " <<iSnake[3]+1 			 << "," <<jSnake[3]+1 			  << " - " <<iSnake[4]+1 			 << "," <<jSnake[4]+1 			  << " - " <<iSnake[5]+1 			 << "," <<jSnake[5]+1 			  << " - " <<iSnake[6]+1 			 << "," <<jSnake[6]+1 			  << endl <<endl;
 						exit(0); //interrupts the program if find a pair of snakes
 					} 
 					
@@ -72,8 +66,8 @@ void findSnakes(int i, int j, vector <vector<int> > grid ,  int iSnake[] = new i
 				
 				} else {
 					for(int c=0;c<7;c++) { //storing the cells of a snake
-						iVectorSnakesA[sum][c]=iSnake[c];
-						jVectorSnakesA[sum][c]=jSnake[c];
+						iVectorSnakes[sum][c]=iSnake[c];
+						jVectorSnakes[sum][c]=jSnake[c];
 					}			
 					return;	
 				}
